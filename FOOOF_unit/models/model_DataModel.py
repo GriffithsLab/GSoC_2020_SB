@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 """Neural Power Spectra SciUnit data class"""
+import sciunit
+from capabilities.cap_ProducesPowerSpectrum import ProducesPowerSpectrum
+
 
 class DataModel(sciunit.Model,ProducesPowerSpectrum):
   """Model that creates a frozen data trace of the neural power spectrum of the data."""

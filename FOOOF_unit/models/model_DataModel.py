@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Neural Power Spectra SciUnit data class"""
 import sciunit
-from capabilities.cap_ProducesPowerSpectrum import ProducesPowerSpectrum
+from FOOOF_unit.capabilities.cap_ProducesPowerSpectrum import ProducesPowerSpectrum
 
 
 class DataModel(sciunit.Model,ProducesPowerSpectrum):

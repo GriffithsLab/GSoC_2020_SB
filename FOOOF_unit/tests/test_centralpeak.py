@@ -7,7 +7,7 @@ import sciunit
 from fooof import FOOOF
 from sciunit.scores import BooleanScore
 import numpy as np
-from capabilities.cap_ProducesPowerSpectrum import ProducesPowerSpectrum
+from FOOOF_unit.capabilities.cap_ProducesPowerSpectrum import ProducesPowerSpectrum
 
 class CentralPeak(sciunit.Test):
   """Test for models only if a peak is present within a specific frequency range of the power spectrum"""

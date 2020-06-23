@@ -3,7 +3,7 @@ import fooof
 import sciunit
 import numpy as np
 from tests.test_correlation2spectrum import Correlation2Spectrum
-from capabilities.cap_ProducesPowerSpectrum import ProducesPowerSpectrum
+from FOOOF_unit.capabilities.cap_ProducesPowerSpectrum import ProducesPowerSpectrum
 from sciunit.scores import FloatScore
 from sciunit.tests import TestM2M
 

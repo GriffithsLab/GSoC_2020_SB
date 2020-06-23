@@ -12,13 +12,6 @@ from capabilities.cap_ProducesPowerSpectrum import ProducesPowerSpectrum
 
 
 #FOOOF helper functions
-def compare_exp(fm1, fm2):
-    """Compare exponent values."""
-
-    exp1 = fm1.get_params('aperiodic_params', 'exponent')
-    exp2 = fm2.get_params('aperiodic_params', 'exponent')
-
-    return exp1 - exp2
 
 def compare_peak_pw(fm1, fm2, band_def):
     """Compare the power of detected peaks."""
@@ -27,6 +20,7 @@ def compare_peak_pw(fm1, fm2, band_def):
     pw2 = get_band_peak_fm(fm2, band_def)[1]
 
     return pw1 - pw2
+
 def compare_band_pw(fm1, fm2, band_def):
     """Compare the power of frequency band ranges."""
 
@@ -35,13 +29,14 @@ def compare_band_pw(fm1, fm2, band_def):
 
     return pw1 - pw2
 
-#Test class: in compute_score change the score depending on the FOOOF function of interest. In the following example with compare_band_pw
+#Test class: Have the option to select compare_peak_pw by intializing it with option=1. By default, compare_band_pw is used.
 class Band_by_Band(sciunit.Test):
   """Test giving a FloatScore which compares the power of frequency band ranges of the observation and the prediction model  """
 
-  def __init__(self, observation=None, name=None, band=None):
-    super().__init__(observation=observation, name=name, band=band)
+  def __init__(self, observation=None, name=None, band=None, option=None):
+    super().__init__(observation=observation, name=name, band=band, option=option)
     self.band = band
+    self.option = option
 
   required_capabilities = (ProducesPowerSpectrum,)
   score_type = FloatScore
@@ -62,6 +57,10 @@ class Band_by_Band(sciunit.Test):
     fm_pred.fit(prediction['freqs'], prediction['powers'], prediction['freq_range'])
 
     bands = Bands(self.band)
-    for label, definition in bands:
-      score = self.score_type((compare_band_pw(fm_pred, fm_obs, definition)))
+    if (self.option == 1):
+      for label, definition in bands:
+        score = self.score_type((compare_peak_pw(fm_pred, fm_obs, definition)))
+    else:
+      for label, definition in bands:
+        score = self.score_type((compare_band_pw(fm_pred, fm_obs, definition)))
     return score

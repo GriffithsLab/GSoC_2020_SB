@@ -33,9 +33,14 @@ class CentralPeak(sciunit.Test):
     return prediction
 
   def compute_score(self, observation, prediction):
-    fm = FOOOF(min_peak_height=self.min_peak)
+    fm = FOOOF()
     fm.fit(prediction['freqs'], prediction['powers'], prediction['freq_range'])
-    pred_cfs = fm.get_params('peak_params', 'CF')
+    pow_ind = fm.get_params('peak_params', 'PW') > self.min_peak
+    if (type(pow_ind)==np.ndarray):
+      index = [i for i, x in enumerate(pow_ind) if x]
+      pred_cfs = fm.get_params('peak_params', 'CF')[index]
+    else:
+      pred_cfs = fm.get_params('peak_params', 'CF') 
 
     score = self.score_type(bool(((pred_cfs >= self.band[0]) & (pred_cfs <= self.band[-1])).any())) # Returns a BooleanScore.
     return score

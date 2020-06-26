@@ -3,12 +3,13 @@
 and an observation using FOOOF tools"""
 
 import sciunit
+import numpy as np
 from fooof import FOOOF
 from fooof.bands import Bands
 from fooof.analysis import get_band_peak_fm
 from fooof.utils import trim_spectrum
 from sciunit.scores import FloatScore
-from capabilities.cap_ProducesPowerSpectrum import ProducesPowerSpectrum
+from FOOOF_unit.capabilities.cap_ProducesPowerSpectrum import ProducesPowerSpectrum
 
     
 class _Band_by_Band(sciunit.Test):

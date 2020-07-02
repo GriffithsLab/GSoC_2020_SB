@@ -4,6 +4,7 @@ import sciunit
 import numpy as np
 from FOOOF_unit.capabilities.cap_ProducesPowerSpectrum import ProducesPowerSpectrum
 from scores.score_correlation import CorrelationScore
+from sciunit.scores import FloatScore
 from sciunit.tests import TestM2M
 
 class Correlation2Spectrum(sciunit.TestM2M):
@@ -28,3 +29,7 @@ class Correlation2Spectrum(sciunit.TestM2M):
   def compute_score(self, prediction1, prediction2):
     score = self.score_type(float(np.corrcoef(prediction1, prediction2)[0,1]))
     return score
+  
+class Correlation2SpectrumFloat(Correlation2Spectrum):
+  score_type = FloatScore
+  FloatScore._best = 1.0

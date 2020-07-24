@@ -11,7 +11,7 @@ setuptools.setup(
     description="A SciUnit library to test features of simulated neural power spectra",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/",  #Need to fill in
+    url="https://github.com/GriffithsLab/GSoC_2020_SB",  #Need to fill in
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",

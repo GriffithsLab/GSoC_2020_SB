@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Neural Power Spectra SciUnit data class"""
+
 import sciunit
 from FOOOF_unit.capabilities.cap_ProducesPowerSpectrum import ProducesPowerSpectrum
 

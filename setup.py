@@ -8,7 +8,7 @@ setuptools.setup(
     version="0.0.1",
     author="Sorenza Bastiaens",
     author_email="sorenza.bastiaens@gmail.com",
-    description="A SciUnit library to test features of simulated neural power spectra",
+    description="A SciUnit library to validate features of simulated neural power spectra",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/GriffithsLab/GSoC_2020_SB",  #Need to fill in

@@ -3,6 +3,9 @@ import setuptools
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
+with open('requirements.txt', 'r') as fp:
+    install_requires = fp.read()
+
 setuptools.setup(
     name="FOOOF_unit", 
     version="0.0.1",
@@ -11,7 +14,8 @@ setuptools.setup(
     description="A SciUnit library to test features of simulated neural power spectra",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/",  #Need to fill in
+    install_requires = install_requires
+    url="https://github.com/GriffithsLab/GSoC_2020_SB",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",

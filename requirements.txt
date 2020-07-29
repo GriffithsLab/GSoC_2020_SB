@@ -1,0 +1,10 @@
+sciunit
+fooof
+scipy
+wget
+numpy
+pandas
+seaborn
+matplotlib
+
+

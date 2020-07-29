@@ -1,4 +1,4 @@
-"""Functions to load MEG data .mat and visualize them all in one plot"""
+"""Functions to load MEG data .mat used in the examples and visualize them all in one plot"""
 
 def load_data_mat(f):
     

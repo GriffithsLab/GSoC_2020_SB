@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+"""Unit test for two neural power spectrum models in order to compare them by computing the correlation coefficient. 
+Two types of score are avaiable: CorrelationScore or FloatScore"""
+
 import fooof
 import sciunit
 import numpy as np
@@ -8,7 +11,6 @@ from sciunit.scores import FloatScore
 from sciunit.tests import TestM2M
 
 class Correlation2Spectrum(sciunit.TestM2M):
-
   """Test the similarity between two neural power spectra models by computing the correlation coefficient"""
 
   required_capabilities = (ProducesPowerSpectrum,)

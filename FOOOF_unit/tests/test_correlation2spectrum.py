@@ -6,7 +6,7 @@ import fooof
 import sciunit
 import numpy as np
 from FOOOF_unit.capabilities.cap_ProducesPowerSpectrum import ProducesPowerSpectrum
-from scores.score_correlation import CorrelationScore
+from FOOOF_unit.scores.score_correlation import CorrelationScore
 from sciunit.scores import FloatScore
 from sciunit.tests import TestM2M
 

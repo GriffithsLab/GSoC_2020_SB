@@ -4,10 +4,9 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 with open('requirements.txt', 'r') as fp:
-    install_requires = fp.read()
-print(type(install_requires))
+    install_requires = fp.read().splitlines()
 
-setuptools.setup(
+setup(
     name="FOOOF_unit", 
     version="0.0.1",
     author="Sorenza Bastiaens",

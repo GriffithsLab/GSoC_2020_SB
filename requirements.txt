@@ -6,5 +6,3 @@ numpy
 pandas
 seaborn
 matplotlib
-
-

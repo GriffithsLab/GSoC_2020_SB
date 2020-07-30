@@ -5,6 +5,7 @@ with open("README.md", "r") as fh:
 
 with open('requirements.txt', 'r') as fp:
     install_requires = fp.read()
+print(type(install_requires))
 
 setuptools.setup(
     name="FOOOF_unit", 

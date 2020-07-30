@@ -15,7 +15,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     install_requires = install_requires
-    url="https://github.com/GriffithsLab/GSoC_2020_SB",  #Need to fill in
+    url="git@github.com:GriffithsLab/GSoC_2020_SB.git",  #Need to fill in
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",

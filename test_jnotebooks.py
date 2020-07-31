@@ -1,6 +1,5 @@
 import subprocess
 import tempfile
-import pytest
 import os
 
 def _exec_notebook(path):

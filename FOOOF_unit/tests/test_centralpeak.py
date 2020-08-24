@@ -39,6 +39,8 @@ class CentralPeak(sciunit.Test):
     if (type(pow_ind)==np.ndarray):
       index = [i for i, x in enumerate(pow_ind) if x]
       pred_cfs = fm.get_params('peak_params', 'CF')[index]
+    elif (pow_ind==False):
+      pred_cfs = np.float64(0.0)
     else:
       pred_cfs = fm.get_params('peak_params', 'CF') 
 

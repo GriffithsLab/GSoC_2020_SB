@@ -1,21 +1,21 @@
 "Functions used to create a database for CentralPeak test"
 
 import sciunit
+import json
 from FOOOF_unit import capabilities, models, scores, tests
 from fooof import FOOOF
-
 import os,sys,glob, numpy as np, pandas as pd
 from itertools import product
 from itertools import groupby
-
 from FOOOF_unit.capabilities import ProducesPowerSpectrum
 from FOOOF_unit.models import NeuralPowerSpectra
 from FOOOF_unit.tests import CentralPeak
 from FOOOF_unit.utils import common_fr_bands
 from FOOOF_unit.welch_psd import Welch_PSD
-
 from tvb.simulator import models
 from scipy.signal import welch
+
+
 
 class Single_Node_TVB:
 
@@ -70,6 +70,7 @@ class Single_Node_TVB:
       V_dat = np.squeeze(dat[:,0,:,:])
       W_dat = np.squeeze(dat[:,1,:,:])  
       return V_dat
+      
       
 def TVB_database(model, parameters, names, fr_range):
   #model:string, parameters: tuple with all parameters, fr_range: string('alpha', 'beta', 'theat' or 'gamma')
@@ -207,6 +208,24 @@ def TVB_database(model, parameters, names, fr_range):
     else:
       new_res = df.sort_index()
       new_res.to_csv('WilsonCowan_database.csv')
-
-
+      
   return new_res
+
+def load_json(filename):
+    with open(filename, 'r') as fp:
+    data = json.load(fp)
+    return data
+
+def main():
+    data = load_json('data.json')
+    p_names = []
+    all_params = []
+    for key, values in (data['parameters'].items()):
+      all_params.append(values)
+      p_names.append(key)
+    all_params = tuple(all_params)
+    
+    res_alpha = TVB_database(data['model'], all_params, p_names, data['fr_range'])
+    
+if __name__ == "__main__":
+    main()

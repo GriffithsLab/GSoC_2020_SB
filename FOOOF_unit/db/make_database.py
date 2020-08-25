@@ -216,8 +216,8 @@ def load_json(filename):
       data = json.load(fp)
     return data
 
-def main():
-    data = load_json('data.json')
+def main(params_file,out_file):
+    data = load_json(params_file)
     p_names = []
     all_params = []
     for key, values in (data['parameters'].items()):
@@ -225,7 +225,17 @@ def main():
       p_names.append(key)
     all_params = tuple(all_params)
     
-    res_alpha = TVB_database(data['model'], all_params, p_names, data['fr_range'])
+    res_alpha = TVB_database(data['model'], all_params, p_names, data['fr_range'],out_file)
     
 if __name__ == "__main__":
-    main()
+    """
+    Usage: 
+
+    python make_database.py params_file.json outfile.csv
+    
+    """
+
+    params_file = sys.argv[1]
+    out_file = sys.argv[2]
+
+    main(params_file,out_file)

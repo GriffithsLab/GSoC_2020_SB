@@ -213,7 +213,7 @@ def TVB_database(model, parameters, names, fr_range):
 
 def load_json(filename):
     with open(filename, 'r') as fp:
-    data = json.load(fp)
+      data = json.load(fp)
     return data
 
 def main():

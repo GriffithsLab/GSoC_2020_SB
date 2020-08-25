@@ -72,7 +72,7 @@ class Single_Node_TVB:
       return V_dat
       
       
-def TVB_database(model, parameters, names, fr_range):
+def TVB_database(model, parameters, names, fr_range, outfile=None):
   #model:string, parameters: tuple with all parameters, fr_range: string('alpha', 'beta', 'theat' or 'gamma')
 
   varied_params = list(product(*parameters))
@@ -151,73 +151,29 @@ def TVB_database(model, parameters, names, fr_range):
         new_res[key] = value
         new_res.set_index(key, append=True, inplace=True)
     new_res = new_res.reorder_levels(all_param_names)
-    if (os.path.isfile('./Generic2DOscillator_database_test.csv')==True):
-      database = pd.read_csv('Generic2DOscillator_database_test.csv', index_col=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
-      if ('result '+fr_range in sorted(database)):
-        new = pd.DataFrame(database['result '+fr_range])
-        total = new.append(new_res)
-        sort = total.sort_index()
-        new_database = sort[~sort.index.duplicated(keep='last')]
-        del database['result '+fr_range]
-        result = pd.concat([database, new_database], axis=1)
-      else:
-        total = pd.concat([database,new_res], axis=1)
-        sort = total.sort_index()
-        result = sort[~sort.index.duplicated(keep='last')]
-      result.to_csv('Generic2DOscillator_database_test.csv')
-    else:
-      new_res = new_res.sort_index()
-      new_res.to_csv('Generic2DOscillator_database_test.csv')
     
-  elif (model=='Jansen-Rit'):
-    if (os.path.isfile('./JansenRit_database_test.csv')==True):
-      new_res = df.copy()
-      database = pd.read_csv('JansenRit_database_test.csv', index_col=[0, 1, 2, 3])
-      if ('result '+fr_range in sorted(database)):
-        new = pd.DataFrame(database['result '+fr_range])
-        total = new.append(new_res)
-        sort = total.sort_index()
-        new_database = sort[~sort.index.duplicated(keep='last')]
-        del database['result '+fr_range]
-        result = pd.concat([database, new_database], axis=1)
-      else:
-        total = pd.concat([database,new_res], axis=1)
-        sort = total.sort_index()
-        result = sort[~sort.index.duplicated(keep='last')]
-      result.to_csv('JansenRit_database_test.csv')
+    if (outfile!=None):
+      new_res = new_res.sort_index()
+      new_res.to_csv(outfile)
     else:
+      pass
+    
+  else:
+    if (outfile!=None):
       new_res = df.sort_index()
-      new_res.to_csv('JansenRit_database_test.csv')
-  
-  elif (model=='Wilson-Cowan'):
-    if (os.path.isfile('./WilsonCowan_database.csv')==True):
-      new_res = df.copy()
-      database = pd.read_csv('WilsonCowan_database.csv', index_col=[0, 1, 2, 3])
-      if ('result '+fr_range in sorted(database)):
-        new = pd.DataFrame(database['result '+fr_range])
-        total = new.append(new_res)
-        sort = total.sort_index()
-        new_database = sort[~sort.index.duplicated(keep='last')]
-        del database['result '+fr_range]
-        result = pd.concat([database, new_database], axis=1)
-      else:
-        total = pd.concat([database,new_res], axis=1)
-        sort = total.sort_index()
-        result = sort[~sort.index.duplicated(keep='last')]
-      result.to_csv('WilsonCowan_database.csv')
-    else:
-      new_res = df.sort_index()
-      new_res.to_csv('WilsonCowan_database.csv')
+      new_res.to_csv(outfile)
+     else:
+      pass
       
   return new_res
 
 def load_json(filename):
     with open(filename, 'r') as fp:
-    data = json.load(fp)
+      data = json.load(fp)
     return data
 
-def main():
-    data = load_json('data.json')
+def main(params_file,out_file):
+    data = load_json(params_file)
     p_names = []
     all_params = []
     for key, values in (data['parameters'].items()):
@@ -225,7 +181,17 @@ def main():
       p_names.append(key)
     all_params = tuple(all_params)
     
-    res_alpha = TVB_database(data['model'], all_params, p_names, data['fr_range'])
+    res_alpha = TVB_database(data['model'], all_params, p_names, data['fr_range'],out_file)
     
 if __name__ == "__main__":
-    main()
+    """
+    Usage: 
+
+    python make_database.py params_file.json outfile.csv
+    
+    """
+
+    params_file = sys.argv[1]
+    out_file = sys.argv[2]
+
+    main(params_file,out_file)

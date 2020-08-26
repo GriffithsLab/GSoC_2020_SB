@@ -162,7 +162,7 @@ def TVB_database(model, parameters, names, fr_range, outfile=None):
     if (outfile!=None):
       new_res = df.sort_index()
       new_res.to_csv(outfile)
-     else:
+    else:
       pass
       
   return new_res

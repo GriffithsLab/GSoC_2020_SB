@@ -124,7 +124,7 @@ def TVB_database(model, parameters, names, fr_range, outfile=None):
   model_t = {}
   t=0
   for param in varied_params:
-    model_t[t] = NeuralPowerSpectra(PSD.loc[param, 'freqs'], PSD.loc[param, 'spectrum'], [1,50], name="Model (c, b, alpha, g) = %s" %(param,))
+    model_t[t] = NeuralPowerSpectra(PSD.loc[param, 'freqs'], PSD.loc[param, 'spectrum'], [1,50], name="Model = %s" %(param,))
     t = t+1
 
   bands = common_fr_bands(fr_range)

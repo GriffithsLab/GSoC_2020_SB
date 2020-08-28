@@ -71,7 +71,7 @@ Once the database is made, parameters of interest can be selected and visualized
 Dependant packages:
 - SciUnit (pip install sciunit)
 - FOOOF (pip install fooof)
-(-for TVB example: pip install tvb-library)
+- (for TVB example: pip install tvb-library)
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)

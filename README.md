@@ -58,7 +58,9 @@ The aim is to create a database for each model of the CentralPeak result for dif
 The code to generate the database for any number of parameters is in the db folder (make_database.py). As input a json file is required with information on the parameters of interest as well as which model is simulated. An example of the json file required is in data.json. The parameter name and values, the model and the frequency range to run the CentralPeak test are required. 
 In addition to the json file, if another filename is given as an argument, the database is saved in a .csv file. The final result will look as following: 
 
-![Capture d’écran 2020-08-27 à 11 48 06](https://user-images.githubusercontent.com/62792658/91425286-3cec2b80-e85b-11ea-8a1d-3f37b28c0607.png)
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/62792658/91425286-3cec2b80-e85b-11ea-8a1d-3f37b28c0607.png" />
+</p>
 
 Once the database is made, parameters of interest can be selected and visualized in a heatmap. The influence of each parameter can be assessed. Here, is an example of a parameter sweep for 4 different parameters  of CentralPeak test within the alpha frequency range for a generic dynamic system with two state variables (Generic2DOscillator).
 

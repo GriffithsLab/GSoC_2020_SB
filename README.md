@@ -35,7 +35,7 @@ The current tests available validate features observed in the neural power spect
 2) Compare the band power of a model against an observation (also possible to compare the detected peaks power)
 3) Compare two models against each other by computing the correlation coefficient
  
-Complete examples on how to run each tests are presented in the folder ‘examples’ in separate files. All the tests first parametrize the neural power spectrum with the FOOOF tool and compute the score of interest.
+Complete [examples](https://github.com/GriffithsLab/GSoC_2020_SB/tree/master/examples) on how to run each tests are presented in the folder ‘examples’ in separate files. All the tests first parametrize the neural power spectrum with the FOOOF tool and compute the score of interest.
  
 The folder FOOOF_unit contains all the capabilities, models and scores needed to run the tests following the SciUnit framework.
 
@@ -55,7 +55,7 @@ It is also possible to run simulations for Single-Node models which is what is d
 
 The aim is to create a database for each model of the CentralPeak result for different brain waves ranges by performing parameter sweeps. This enables the user to determine which parameters can be used to produce peak of interests. The code used can be found in db folder make_database.py
 
-The code to generate the database for any number of parameters is in the db folder (make_database.py). As input a json file is required with information on the parameters of interest as well as which model is simulated. An example of the json file required is in data.json. The parameter name and values, the model and the frequency range to run the CentralPeak test are required. 
+The code to generate the database for any number of parameters is in the [db](https://github.com/GriffithsLab/GSoC_2020_SB/tree/master/FOOOF_unit/db) folder (make_database.py). As input a json file is required with information on the parameters of interest as well as which model is simulated. An example of the json file required is in data.json. The parameter name and values, the model and the frequency range to run the CentralPeak test are required. 
 In addition to the json file, if another filename is given as an argument, the database is saved in a .csv file. The final result will look as following: 
 
 <p align="center">

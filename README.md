@@ -30,7 +30,7 @@ The following three images represents a time-series, the corresponding power spe
 ## Description
 
 The current tests available validate features observed in the neural power spectrum. The simulated neural power spectrum tested is wrapped in a model class, `NeuralPowerSpectra`, which implements the capability class `ProducesPowerSpectrum`. The frequency, spectrum and frequency range values of the neural power spectrum of interest is required. Each unit test correspond to a different usage of SciUnit. The three tests developed:
-1) Determine wether a peak is present within a specific frequency range. This is a model versus feature unit test. The tests checks whether a certain feature is produced by the model.
+1) Determine whether a peak is present within a specific frequency range. This is a model versus feature unit test. The tests checks whether a certain feature is produced by the model.
 2) Compare the band power of a model against an observation (also possible to compare the detected peaks power). This corresponds to a model versus empirical data unit test. The model is tested against the data. 
 3) Compare two models against each other by computing the correlation coefficient. The final test is a model versus model test. The model is tested against a reference model. 
  

@@ -1,4 +1,4 @@
-"Functions used to create a database for CentralPeak test"
+"""Database generator with CentralPeak test results for three The Virtual Brain models"""
 
 import sciunit
 import json
@@ -18,12 +18,17 @@ from scipy.signal import welch
 
 
 class Single_Node_TVB:
-
+  """Class to execute Single-Node simulations for three TVB model: Generic2DOcillator, Wilson-Cowan and Jansen-Rit"""
+  
+  # Initialize class model type (Generic2DOcillator, Wilson-Cowan and Jansen-Rit) and their corresponding parameter values
   def __init__(self, fixed_param, option):
     self.fixed_param = fixed_param
     self.option = option
-
+  
+  # Function to run single-node simulation on the model initialized with parameters of interest. 
   def simulation(self, n_step, dt, initial):
+    
+    #Length and step size of the simulation
     n_step = n_step
     dt = dt
 
@@ -31,11 +36,14 @@ class Single_Node_TVB:
     fixed_params = self.fixed_param
     fixed_params = {k: np.array(v) for k,v in fixed_params.items()}
 
-    # Initialize model instance with fixed params for Generic2DOscillator, Wilson-Cowan or Jansen-Rit
+    # Run simulation for a Wilson-Cowan model 
     if (self.option=='Wilson-Cowan'):
+      
+      # Initial conditions. Example: np.array([0.,0.])[:,np.newaxis]
       initconds = initial
+      
       mod = models.WilsonCowan(**fixed_params)
-
+      
       # Execute single-node simulation run
       time,dat = mod.stationary_trajectory(n_step=n_step,dt=dt, initial_conditions=initconds)
         
@@ -43,12 +51,15 @@ class Single_Node_TVB:
       E_dat = np.squeeze(dat[:,0,:,:])
       I_dat = np.squeeze(dat[:,1,:,:])  
       return E_dat
-
+    
+    # Run simulation for a Jansen-Rit model
     elif (self.option=='Jansen-Rit'):
-      #initial = np.array([0.5,0.5,0.5,0.5,0.5,0.5])[:,np.newaxis]
+      
+      # Initial Conditions. Example: np.array([0.5,0.5,0.5,0.5,0.5,0.5])[:,np.newaxis]
       initconds = initial
       mod = models.JansenRit(**fixed_params)
       
+      # Execute single-node simulation run
       time,dat = mod.stationary_trajectory(n_step=n_step, dt=dt, initial_conditions=initconds)
       
       #Uncomment if want to return other variables of the Jansen-Rit model
@@ -60,8 +71,11 @@ class Single_Node_TVB:
       #y5_dat = np.squeeze(dat[:,5,:,:])
       return y0_dat
       # Define simulation details
-
+    
+    # Run simulation for a Generic2DOscillator model
     else:
+      
+      # Initial conditions. Example: np.array([-3.,-3.])[:,np.newaxis]
       initconds = initial
       mod = models.Generic2dOscillator(**fixed_params)
 
@@ -73,10 +87,14 @@ class Single_Node_TVB:
       
       
 def TVB_database(model, parameters, names, fr_range, outfile=None):
-  #model:string, parameters: tuple with all parameters, fr_range: string('alpha', 'beta', 'theat' or 'gamma')
-
+  """ Function to generate a database with CentralPeak test results of three TVB models (Generic2DOscillator, Wilson-Cowan and Jansen-Rit) for different 
+  parameter combinations (parameter sweep)"""
+  
+  # Make list of parameter combinations from arrays of the varying parameters.
   varied_params = list(product(*parameters))
   param_names = names
+  
+  # Default values of each models
   if (model=='Generic2DOscillator'):
         data_name = 'V'
         default = dict(d = 0.075 ,  tau = 3.0, I = -0.4,
@@ -89,7 +107,8 @@ def TVB_database(model, parameters, names, fr_range, outfile=None):
   elif (model=='Jansen-Rit'):
         data_name = 'y0'
         default = dict(J = 135.0, A= 3.25, B=22.0, mu = 0.22)
-
+  
+  # Dict with simulation parameters for each parameter combination
   sim_param = default.copy()
   simulation_param = {}
   for j in range(0, len(varied_params)):
@@ -98,6 +117,7 @@ def TVB_database(model, parameters, names, fr_range, outfile=None):
       simulation_param[varied_params[j]]= sim_param
     sim_param = default.copy()
     
+  # Initialize Dataframe with all simulation results
   n_step = 50000    #Simulation time can be changed
   dt = 0.1
   arr = np.linspace(0.0, n_step*dt, int((n_step*dt)+1))
@@ -106,6 +126,7 @@ def TVB_database(model, parameters, names, fr_range, outfile=None):
   index = pd.MultiIndex.from_tuples(index_multi, names=[*names, 'time'])
   simulations = pd.DataFrame(index=index, columns = [data_name], dtype='float64')
 
+  # Execute single-node simulation for each model
   for params in varied_params:
     if (model=='Generic2DOscillator'):
         initial = np.array([-3.,-3.])[:,np.newaxis]
@@ -118,23 +139,28 @@ def TVB_database(model, parameters, names, fr_range, outfile=None):
     TVB_obj = Single_Node_TVB(fixed_param, model)
     data = TVB_obj.simulation(n_step, dt, initial)
     simulations.loc[params, data_name] = data
-
+  
+  # Obtain Neural Power Spectrum of each TVB simulation with Welch's method. PSD is a dataframe with all the neural power spectra.
   PSD = Welch_PSD(varied_params, param_names, simulations, data_name)
 
+  # Instantiate NeuralPowerSpectra model class with each TVB simulation neural power spectum.
   model_t = {}
   t=0
   for param in varied_params:
     model_t[t] = NeuralPowerSpectra(PSD.loc[param, 'freqs'], PSD.loc[param, 'spectrum'], [1,50], name="Model = %s" %(param,))
     t = t+1
-
+  
+  # Instantiate CentralPeak test class with frequency range of interest. fr_range is a string corresponding to the brain wave of interest: 'theta', 'alpha', 'beta' or 'gamma'
   bands = common_fr_bands(fr_range)
   band_tests = [CentralPeak(name=key, min_peak=0.8, band=value)
           for key, value in bands.items()]
   band_suite = sciunit.TestSuite(band_tests)
-
+  
+  # Test executed with judge method. A boolean score is returned: 'Pass' if a peak is present in the frequency range, 'Fail' otherwise.
   model_tot = list(model_t.values())
   res_tot = band_suite.judge(model_tot)
-
+  
+  # Rearrange the score matrix
   df = res_tot.score
   iterables = [*parameters]
   multiindex = pd.MultiIndex.from_product(iterables, names=param_names)
@@ -142,7 +168,8 @@ def TVB_database(model, parameters, names, fr_range, outfile=None):
   new_result = df.reindex(multiindex)
   df = new_result
   df.columns = ['result '+fr_range]
-
+  
+  # Save result in a .csv file if Generic2DOscillator simulations with all the parameter values of the model
   if (model=='Generic2DOscillator'):
     new_res = df.copy()
     all_param_names = ['d','tau', 'I', 'f', 'e', 'beta', 'a', 'c', 'b', 'alpha', 'g']
@@ -158,6 +185,7 @@ def TVB_database(model, parameters, names, fr_range, outfile=None):
     else:
       pass
     
+  # Save result in a .csv file for the other two models  
   else:
     if (outfile!=None):
       new_res = df.sort_index()
@@ -167,11 +195,13 @@ def TVB_database(model, parameters, names, fr_range, outfile=None):
       
   return new_res
 
+# Function to load a json file with the varying parameters.
 def load_json(filename):
     with open(filename, 'r') as fp:
       data = json.load(fp)
     return data
 
+# Main functions generating the database for the TVB model and parameters of interest.
 def main(params_file,out_file):
     data = load_json(params_file)
     p_names = []

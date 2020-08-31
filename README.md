@@ -16,12 +16,12 @@ A python package for running validation tests on models generating a neural powe
 [FOOOF](https://fooof-tools.github.io/fooof/index.html) is a tool parametrizing neural power spectra by breaking it into an aperiodic component reflecting 1/f characteristics and a number of periodic components defined as a set of peaks parametrized by a Gaussian function. The FOOOF tool also gives the option to generate power spectra with aperiodic and periodic components of our choice for testing purposes. 
 In each test the neural power spectrum of the model is parametrized with FOOOF as follows:
 
-```ruby
+```python
 fm = FOOOF()
 fm.fit(prediction['freqs'], prediction['powers'], prediction['freq_range'])
 ```
 
-From the fm object created, information of interest can be easily retrieved with specific functions such as fm.get_params('peak_params', 'CF'), which gives the central frequency of each peak detected. 
+From the `fm` object created, information of interest can be easily retrieved with specific functions such as `fm.get_params('peak_params', 'CF')`, which gives the central frequency of each peak detected. 
 
 The following three images represents a time-series, the corresponding power spectrum and the parametrized result with FOOOF:
 

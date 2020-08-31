@@ -1,4 +1,4 @@
-"""Functions to load MEG data .mat used in the examples and visualize them all in one plot"""
+"""Functions to load MEG data .mat used in the examples and visualize them all in one plot. This is used in Example1_CentralPeak.ipynb"""
 
 def load_data_mat(f):
     

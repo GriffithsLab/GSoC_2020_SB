@@ -29,16 +29,16 @@ The following three images represents a time-series, the corresponding power spe
 
 ## Description
 
-The current tests available validate features observed in the neural power spectrum. The simulated neural power spectrum tested is wrapped in a model class, NeuralPowerSpectra, which implements the capability classe ProducesPowerSpectrum. The frequency, spectrum and frequency range values of the neural power spectrum of interest is required. Each unit test correspond to a different usage of SciUnit. The three tests developed:
+The current tests available validate features observed in the neural power spectrum. The simulated neural power spectrum tested is wrapped in a model class, `NeuralPowerSpectra`, which implements the capability class `ProducesPowerSpectrum`. The frequency, spectrum and frequency range values of the neural power spectrum of interest is required. Each unit test correspond to a different usage of SciUnit. The three tests developed:
 1) Determine wether a peak is present within a specific frequency range. This is a model versus feature unit test. The tests checks wether a certain feature is produced by the model.
 2) Compare the band power of a model against an observation (also possible to compare the detected peaks power). This corresponds to a model versus empirical data unit test. The model is tested against the data. 
 3) Compare two models against each other by computing the correlation coefficient. The final test is a model versus model test. The model is tested against a reference modeL. 
  
 Complete [examples](https://github.com/GriffithsLab/GSoC_2020_SB/tree/master/examples) on how to run each tests are presented in the folder ‘examples’ in separate files. All the tests first parametrize the neural power spectrum with the FOOOF tool and compute the score of interest.
  
-The folder FOOOF_unit contains all the capabilities, models and scores needed to run the tests following the SciUnit framework.
+The folder `FOOOF_unit` contains all the capabilities, models and scores needed to run the tests following the SciUnit framework.
 
-The utils.py file contains a function (common_fr_bands) that loads the frequency range values of the most common brain waves: theta, alpha, beta and gamma. 
+The utils.py file contains a function (`common_fr_bands`) that loads the frequency range values of the most common brain waves: theta, alpha, beta and gamma. 
 The io.py file contains functions to load and visualize data used as examples.
 
 ## Use Case Example With TVB
@@ -52,7 +52,7 @@ It is also possible to run simulations for Single-Node models which is what is d
 
 ### Database
 
-The aim is to create a database for each model of the CentralPeak result for different brain waves ranges by performing parameter sweeps. This enables the user to determine which parameters can be used to produce peak of interests. The code used can be found in db folder make_database.py
+The aim is to create a database for each model of the `CentralPeak` result for different brain waves ranges by performing parameter sweeps. This enables the user to determine which parameters can be used to produce peak of interests. The code used can be found in db folder make_database.py
 
 The code to generate the database for any number of parameters is in the [db](https://github.com/GriffithsLab/GSoC_2020_SB/tree/master/FOOOF_unit/db) folder (make_database.py). As input a json file is required with information on the parameters of interest as well as which model is simulated. An example of the json file required is in data.json. The parameter name and values, the model and the frequency range to run the CentralPeak test are required. 
 In addition to the json file, if another filename is given as an argument, the database is saved in a .csv file. The final result will look as following: 
@@ -61,7 +61,7 @@ In addition to the json file, if another filename is given as an argument, the d
   <img src="https://user-images.githubusercontent.com/62792658/91425286-3cec2b80-e85b-11ea-8a1d-3f37b28c0607.png" />
 </p>
 
-Once the database is made, parameters of interest can be selected and visualized in a heatmap. The influence of each parameter can be assessed. Here, is an example of a parameter sweep for 4 different parameters  of CentralPeak test within the alpha frequency range for a generic dynamic system with two state variables (Generic2DOscillator).
+Once the database is made, parameters of interest can be selected and visualized in a heatmap. The influence of each parameter can be assessed. Here, is an example of a parameter sweep for 4 different parameters  of `CentralPeak` test within the alpha frequency range for a generic dynamic system with two state variables (Generic2DOscillator).
 
 ![Heatmap](https://user-images.githubusercontent.com/62792658/91424291-ea5e3f80-e859-11ea-9217-5baf558ece04.png)
 

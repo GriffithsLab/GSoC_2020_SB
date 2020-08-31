@@ -1,5 +1,6 @@
 sciunit
 fooof
+tvb-library
 scipy
 wget
 numpy

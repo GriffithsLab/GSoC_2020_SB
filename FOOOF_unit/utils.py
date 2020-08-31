@@ -1,4 +1,4 @@
-"""Function to load common frequency bands"""
+""" Function to load common frequency bands (brain waves): theta, alpha, beta and gamma """
 
 def common_fr_bands(range):
   if (range =='theta'):

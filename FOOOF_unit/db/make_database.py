@@ -1,4 +1,4 @@
-"""Database generator with CentralPeak test results for three The Virtual Brain models"""
+"""Database generator with CentralPeak test results for three The Virtual Brain models: Generic2DOscillator, Wilson-Cowan and Jansen-Rit"""
 
 import sciunit
 import json
@@ -32,7 +32,7 @@ class Single_Node_TVB:
     n_step = n_step
     dt = dt
 
-    # Parameters for the model passed
+    # Parameters of the model passed
     fixed_params = self.fixed_param
     fixed_params = {k: np.array(v) for k,v in fixed_params.items()}
 
@@ -47,9 +47,10 @@ class Single_Node_TVB:
       # Execute single-node simulation run
       time,dat = mod.stationary_trajectory(n_step=n_step,dt=dt, initial_conditions=initconds)
         
-      # Output from TVB sims is always a 4D array. Reorganize into a 2D pandas dataframe      
+      # Output from TVB sims is always a 4D array. Reorganize into a 2D pandas dataframe. Wilson-Cowan has two state variable. E_dat represent activity of
+      # excitatory cells and I_dat inhibitory cells. Uncomment to obtain I_dat  
       E_dat = np.squeeze(dat[:,0,:,:])
-      I_dat = np.squeeze(dat[:,1,:,:])  
+      #I_dat = np.squeeze(dat[:,1,:,:])  
       return E_dat
     
     # Run simulation for a Jansen-Rit model
@@ -62,7 +63,7 @@ class Single_Node_TVB:
       # Execute single-node simulation run
       time,dat = mod.stationary_trajectory(n_step=n_step, dt=dt, initial_conditions=initconds)
       
-      #Uncomment if want to return other variables of the Jansen-Rit model
+      # Uncomment if want to return other variables of the Jansen-Rit model. Each correspond to a different state-variable.
       y0_dat = np.squeeze(dat[:,0,:,:])
       #y1_dat = np.squeeze(dat[:,1,:,:])
       #y2_dat = np.squeeze(dat[:,2,:,:])
@@ -70,7 +71,6 @@ class Single_Node_TVB:
       #4_dat = np.squeeze(dat[:,4,:,:])
       #y5_dat = np.squeeze(dat[:,5,:,:])
       return y0_dat
-      # Define simulation details
     
     # Run simulation for a Generic2DOscillator model
     else:
@@ -81,8 +81,10 @@ class Single_Node_TVB:
 
       time,dat = mod.stationary_trajectory(n_step=n_step,dt=dt,
                                           initial_conditions=initconds)    
+      # Generic2DOscillator has two state variables. V_dat represents a function of the neuron's membrane potential, such as the firing rate and
+      # W_dat is a recovery variable. Uncomment fort W_dat.
       V_dat = np.squeeze(dat[:,0,:,:])
-      W_dat = np.squeeze(dat[:,1,:,:])  
+      #W_dat = np.squeeze(dat[:,1,:,:])  
       return V_dat
       
       

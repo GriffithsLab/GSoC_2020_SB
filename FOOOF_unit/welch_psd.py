@@ -1,4 +1,5 @@
-"Function to get the PSD using Welch's method for simulations "
+""" Function computing the Power Spectrum unsing Welch's method for a listof TVB simulations in Example_Database.ipynb"""
+
 import pandas as pd
 from scipy.signal import welch
 

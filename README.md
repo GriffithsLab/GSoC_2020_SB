@@ -68,13 +68,23 @@ Once the database is made, parameters of interest can be selected and visualized
 
 ## Installation
  
-Dependant packages:
-- SciUnit (pip install sciunit)
-- FOOOF (pip install fooof)
-- (for TVB example: pip install tvb-library)
+Installation is best done using `pip`
+
+The principal non-standard Python dependencies are: `sciunit`, `fooof`, `tvb-library`, `tvb-data`
+
+Install from source with the following on the command line:
+
+```bash
+git clone https://github.com/GriffithsLab/GSoC_2020_SB
+cd GSoc_2020_SB
+pip install -e .
+```
+
 
 ## License
-[MIT](https://choosealicense.com/licenses/mit/)
+
+This code is licensed under [MIT](https://choosealicense.com/licenses/mit/)
 
 ## Acknowledgments
+
 

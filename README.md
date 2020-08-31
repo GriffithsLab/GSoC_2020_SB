@@ -29,10 +29,11 @@ The following three images represents a time-series, the corresponding power spe
 
 ## Description
 
-The current tests available validate features observed in the neural power spectrum. The simulated neural power spectrum tested is wrapped in a model class, `NeuralPowerSpectra`, which implements the capability class `ProducesPowerSpectrum`. The frequency, spectrum and frequency range values of the neural power spectrum of interest is required. Each unit test correspond to a different usage of SciUnit. The three tests developed:
-1) Determine whether a peak is present within a specific frequency range. This is a model versus feature unit test. The tests checks whether a certain feature is produced by the model.
-2) Compare the band power of a model against an observation (also possible to compare the detected peaks power). This corresponds to a model versus empirical data unit test. The model is tested against the data. 
-3) Compare two models against each other by computing the correlation coefficient. The final test is a model versus model test. The model is tested against a reference model. 
+The current tests available validate features observed in the neural power spectrum. The simulated neural power spectrum tested is wrapped in a model class, `NeuralPowerSpectra`, which implements the capability class `ProducesPowerSpectrum`. The frequency, spectrum and frequency range values of the neural power spectrum of interest is required. Each unit test correspond to a different usage of SciUnit. The three tests developed do the following:
+
+***Test 1*** - Determines whether a peak is present within a specific frequency range. This is a model versus feature unit test. The tests checks whether a certain feature is produced by the model.  
+***Test 2*** -  Compares the band power of a model against an observation (also possible to compare the detected peaks power). This corresponds to a model versus empirical data unit test. The model is tested against the data.   
+***Test 3*** - Compares two models against each other by computing the correlation coefficient. The final test is a model versus model test. The model is tested against a reference model.   
  
 Complete [examples](https://github.com/GriffithsLab/GSoC_2020_SB/tree/master/examples) on how to run each tests are presented in the folder ‘examples’ in separate files. All the tests first parametrize the neural power spectrum with the FOOOF tool and compute the score of interest.
  

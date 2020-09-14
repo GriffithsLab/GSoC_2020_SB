@@ -1,5 +1,6 @@
-"""Database generator with CentralPeak test results for three The Virtual Brain models: Generic2DOscillator, Wilson-Cowan and Jansen-Rit"""
+"Functions used to create a database for CentralPeak test"
 
+#Import all modules and libraries of interest
 import sciunit
 import json
 from FOOOF_unit import capabilities, models, scores, tests
@@ -14,21 +15,23 @@ from FOOOF_unit.utils import common_fr_bands
 from FOOOF_unit.welch_psd import Welch_PSD
 from tvb.simulator import models
 from scipy.signal import welch
-
+from p_tqdm import p_map
+import multiprocessing
+from functools import partial
 
 
 class Single_Node_TVB:
-  """Class to execute Single-Node simulations for three TVB model: Generic2DOcillator, Wilson-Cowan and Jansen-Rit"""
-  
+"""Class to execute Single-Node simulations for three TVB model: Generic2DOcillator, Wilson-Cowan and Jansen-Rit"""
+
   # Initialize class model type (Generic2DOcillator, Wilson-Cowan and Jansen-Rit) and their corresponding parameter values
   def __init__(self, fixed_param, option):
     self.fixed_param = fixed_param
     self.option = option
-  
-  # Function to run single-node simulation on the model initialized with parameters of interest. 
+
+  # Function to run single-node simulation on the model initialized with parameters of interest.
   def simulation(self, n_step, dt, initial):
-    
-    #Length and step size of the simulation
+
+    # Length and step size of the simulation
     n_step = n_step
     dt = dt
 
@@ -36,33 +39,34 @@ class Single_Node_TVB:
     fixed_params = self.fixed_param
     fixed_params = {k: np.array(v) for k,v in fixed_params.items()}
 
-    # Run simulation for a Wilson-Cowan model 
+    # Run simulation for a Wilson-Cowan model
     if (self.option=='Wilson-Cowan'):
-      
+
       # Initial conditions. Example: np.array([0.,0.])[:,np.newaxis]
       initconds = initial
-      
+
       mod = models.WilsonCowan(**fixed_params)
-      
+
       # Execute single-node simulation run
       time,dat = mod.stationary_trajectory(n_step=n_step,dt=dt, initial_conditions=initconds)
-        
+
       # Output from TVB sims is always a 4D array. Reorganize into a 2D pandas dataframe. Wilson-Cowan has two state variable. E_dat represent activity of
-      # excitatory cells and I_dat inhibitory cells. Uncomment to obtain I_dat  
+      # excitatory cells and I_dat inhibitory cells. Uncomment to obtain I_dat
       E_dat = np.squeeze(dat[:,0,:,:])
-      #I_dat = np.squeeze(dat[:,1,:,:])  
+      # I_dat = np.squeeze(dat[:,1,:,:])
       return E_dat
-    
+
     # Run simulation for a Jansen-Rit model
     elif (self.option=='Jansen-Rit'):
-      
+
+
       # Initial Conditions. Example: np.array([0.5,0.5,0.5,0.5,0.5,0.5])[:,np.newaxis]
       initconds = initial
       mod = models.JansenRit(**fixed_params)
-      
+
       # Execute single-node simulation run
       time,dat = mod.stationary_trajectory(n_step=n_step, dt=dt, initial_conditions=initconds)
-      
+
       # Uncomment if want to return other variables of the Jansen-Rit model. Each correspond to a different state-variable.
       y0_dat = np.squeeze(dat[:,0,:,:])
       #y1_dat = np.squeeze(dat[:,1,:,:])
@@ -71,36 +75,41 @@ class Single_Node_TVB:
       #4_dat = np.squeeze(dat[:,4,:,:])
       #y5_dat = np.squeeze(dat[:,5,:,:])
       return y0_dat
-    
+
     # Run simulation for a Generic2DOscillator model
     else:
-      
+
       # Initial conditions. Example: np.array([-3.,-3.])[:,np.newaxis]
       initconds = initial
       mod = models.Generic2dOscillator(**fixed_params)
 
       time,dat = mod.stationary_trajectory(n_step=n_step,dt=dt,
-                                          initial_conditions=initconds)    
+                                          initial_conditions=initconds)
       # Generic2DOscillator has two state variables. V_dat represents a function of the neuron's membrane potential, such as the firing rate and
       # W_dat is a recovery variable. Uncomment fort W_dat.
       V_dat = np.squeeze(dat[:,0,:,:])
-      #W_dat = np.squeeze(dat[:,1,:,:])  
+      #W_dat = np.squeeze(dat[:,1,:,:])
       return V_dat
-      
-      
-def TVB_database(model, parameters, names, fr_range, outfile=None):
-  """ Function to generate a database with CentralPeak test results of three TVB models (Generic2DOscillator, Wilson-Cowan and Jansen-Rit) for different 
+
+
+def TVB_database(model, varied_params, names, fr_range):
+""" Function to generate a database with CentralPeak test results of three TVB models (Generic2DOscillator, Wilson-Cowan and Jansen-Rit) for different
   parameter combinations (parameter sweep)"""
-  
-  # Make list of parameter combinations from arrays of the varying parameters.
-  varied_params = list(product(*parameters))
+
   param_names = names
-  
+
+  #Obtain arrays for each parameter with their corresponding values
+  parameters = []
+  for i in range(len(param_names)):
+     parameters.append([elem[i] for elem in varied_params])
+  parameters = [list(dict.fromkeys(i)) for i in parameters]
+  parameters = tuple(parameters)
+
   # Default values of each models
   if (model=='Generic2DOscillator'):
         data_name = 'V'
         default = dict(d = 0.075 ,  tau = 3.0, I = -0.4,
-                    f = 1/3, e = 0.0, beta = 0.8,  a = 0.7, alpha=1.0, c=0.0, b=-1.0, g=0.0)        
+                    f = 1/3, e = 0.0, beta = 0.8,  a = 0.7, alpha=1.0, c=0.0, b=-1.0, g=0.0)
   elif (model=='Wilson-Cowan'):
         data_name = 'E'
         default = dict(alpha_i=1.0, alpha_e=1.0, c_e=1.0, c_i=1.0, Q=0, P=1.25, b_e=4.0, b_i=3.7,
@@ -109,8 +118,8 @@ def TVB_database(model, parameters, names, fr_range, outfile=None):
   elif (model=='Jansen-Rit'):
         data_name = 'y0'
         default = dict(J = 135.0, A= 3.25, B=22.0, mu = 0.22)
-  
-  # Dict with simulation parameters for each parameter combination
+
+  # Dictionary with simulation parameters for each parameter combination
   sim_param = default.copy()
   simulation_param = {}
   for j in range(0, len(varied_params)):
@@ -118,8 +127,8 @@ def TVB_database(model, parameters, names, fr_range, outfile=None):
       sim_param[param_names[i]] = varied_params[j][i]
       simulation_param[varied_params[j]]= sim_param
     sim_param = default.copy()
-    
-  # Initialize Dataframe with all simulation results
+
+  # Initialize DataFrame with all simulation results
   n_step = 50000    #Simulation time can be changed
   dt = 0.1
   arr = np.linspace(0.0, n_step*dt, int((n_step*dt)+1))
@@ -141,7 +150,7 @@ def TVB_database(model, parameters, names, fr_range, outfile=None):
     TVB_obj = Single_Node_TVB(fixed_param, model)
     data = TVB_obj.simulation(n_step, dt, initial)
     simulations.loc[params, data_name] = data
-  
+
   # Obtain Neural Power Spectrum of each TVB simulation with Welch's method. PSD is a dataframe with all the neural power spectra.
   PSD = Welch_PSD(varied_params, param_names, simulations, data_name)
 
@@ -151,79 +160,101 @@ def TVB_database(model, parameters, names, fr_range, outfile=None):
   for param in varied_params:
     model_t[t] = NeuralPowerSpectra(PSD.loc[param, 'freqs'], PSD.loc[param, 'spectrum'], [1,50], name="Model = %s" %(param,))
     t = t+1
-  
+
   # Instantiate CentralPeak test class with frequency range of interest. fr_range is a string corresponding to the brain wave of interest: 'theta', 'alpha', 'beta' or 'gamma'
   bands = common_fr_bands(fr_range)
   band_tests = [CentralPeak(name=key, min_peak=0.8, band=value)
           for key, value in bands.items()]
   band_suite = sciunit.TestSuite(band_tests)
-  
+
   # Test executed with judge method. A boolean score is returned: 'Pass' if a peak is present in the frequency range, 'Fail' otherwise.
   model_tot = list(model_t.values())
   res_tot = band_suite.judge(model_tot)
-  
+
   # Rearrange the score matrix
   df = res_tot.score
   iterables = [*parameters]
   multiindex = pd.MultiIndex.from_product(iterables, names=param_names)
   df.index = np.array(multiindex)
   new_result = df.reindex(multiindex)
-  df = new_result
-  df.columns = ['result '+fr_range]
-  
-  # Save result in a .csv file if Generic2DOscillator simulations with all the parameter values of the model
-  if (model=='Generic2DOscillator'):
-    new_res = df.copy()
-    all_param_names = ['d','tau', 'I', 'f', 'e', 'beta', 'a', 'c', 'b', 'alpha', 'g']
-    for key, value in default.items():
-      if (key not in sorted(new_res.index.names)):
-        new_res[key] = value
-        new_res.set_index(key, append=True, inplace=True)
-    new_res = new_res.reorder_levels(all_param_names)
-    
-    if (outfile!=None):
-      new_res = new_res.sort_index()
-      new_res.to_csv(outfile)
-    else:
-      pass
-    
-  # Save result in a .csv file for the other two models  
-  else:
-    if (outfile!=None):
-      new_res = df.sort_index()
-      new_res.to_csv(outfile)
-    else:
-      pass
-      
-  return new_res
+  new_result.columns = ['result '+fr_range]
 
-# Function to load a json file with the varying parameters.
+  if (model=='Generic2DOscillator'):
+     all_param_names = ['d','tau', 'I', 'f', 'e', 'beta', 'a', 'c', 'b', 'alpha', 'g']
+     for key, value in default.items():
+       if (key not in sorted(new_result.index.names)):
+         new_result[key] = value
+         new_result.set_index(key, append=True, inplace=True)
+     new_result = new_result.reorder_levels(all_param_names)
+  else:
+      pass
+
+  return new_result
+
+
+def csv_file(result_dataframe, fr_range, filename):
+#Function to create .csv file and save result
+    if (os.path.isfile('./'+filename)==True):
+      database = pd.read_csv(filename, index_col=list(range(len(result_dataframe.index.names))))
+      if ('result '+fr_range in sorted(database)):
+        new = pd.DataFrame(database['result '+fr_range])
+        total = new.append(result_dataframe)
+        sort = total.sort_index()
+        new_database = sort[~sort.index.duplicated(keep='last')]
+        del database['result '+fr_range]
+        result = pd.concat([database, new_database], axis=1)
+      else:
+        total = pd.concat([database,result_dataframe], axis=1)
+        sort = total.sort_index()
+        result = sort[~sort.index.duplicated(keep='last')]
+      result.to_csv(filename)
+    else:
+      result_dataframe= result_dataframe.sort_index()
+      result_dataframe.to_csv(filename)
+    print('File Saved')
+
+
 def load_json(filename):
+"""Function to load json file with information on the parameters of interest"""
+
     with open(filename, 'r') as fp:
       data = json.load(fp)
     return data
 
-# Main functions generating the database for the TVB model and parameters of interest.
-def main(params_file,out_file):
-    data = load_json(params_file)
+
+def _sbfoo(params, model, names, range):
+"""Function to run TVB_database (used for multiprocessing purposes)"""
+
+    res_alpha = TVB_database(model, params, names, range)
+    return res_alpha
+
+
+if __name__ == '__main__':
+
+    #Load json file with information on model, parameter values and frequency range
+    data = load_json('data_test.json')
+
+    #Get all parameter values and their names
     p_names = []
     all_params = []
     for key, values in (data['parameters'].items()):
       all_params.append(values)
       p_names.append(key)
     all_params = tuple(all_params)
-    
-    res_alpha = TVB_database(data['model'], all_params, p_names, data['fr_range'],out_file)
-    
-if __name__ == "__main__":
-    """
-    Usage: 
 
-    python make_database.py params_file.json outfile.csv
-    
-    """
+    #Make list with all parameter combinations
+    all_varied_params = list(product(*all_params))
 
-    params_file = sys.argv[1]
-    out_file = sys.argv[2]
+    #Separate the list into sub-lists
+    chunk_size = int((len(all_varied_params)/(multiprocessing.cpu_count())))
+    new_list = [all_varied_params[i:i+chunk_size] for i in range(0, len(all_varied_params), chunk_size)]
 
-    main(params_file,out_file)
+    #Create p_map for multiprocessing with non-iterable arguments. Iterable arguments is the list with sub lists
+    non_itargs = partial(_sbfoo, model=data['model'], names=p_names, range=data['fr_range'])
+    res = p_map(non_itargs, new_list)
+
+    #All p_map results are concacenated together
+    dataframe_res = (pd.concat(res))
+
+    #Function to create .csv file with the result
+    csv_file(dataframe_res, data['fr_range'], 'G_multi.csv')

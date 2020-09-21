@@ -70,8 +70,8 @@ The principal non-standard Python dependencies are: `sciunit`, `fooof`, `tvb-lib
 Install from source with the following on the command line:
 
 ```bash
-git clone https://github.com/GriffithsLab/GSoC_2020_SB
-cd GSoc_2020_SB
+git clone https://github.com/GriffithsLab/fooof-unit
+cd fooof-unit
 pip install -e .
 ```
 

@@ -1,11 +1,6 @@
-# SB_GSoC_2020
-Project repo for Sorenza Bastiaens' GSoC 2020 work
+# FOOOF-Unit
 
-(In progress)
-
-## FOOOF_unit
-
-A python package for running validation tests on models generating a neural power spectrum using the SciUnit-framework and FOOOF tool to parameterize the spectrum.
+A python package for running validation tests on models generating a neural power spectrum using [SciUnit](https://github.com/scidash/sciunit) and [FOOOF](https://github.com/fooof-tools/fooof).
 
 ## About SciUnit
 

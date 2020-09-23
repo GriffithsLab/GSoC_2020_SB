@@ -2,7 +2,7 @@
 """Neural Power Spectra SciUnit model class"""
 
 import sciunit
-from FOOOF_unit.capabilities.cap_ProducesPowerSpectrum import ProducesPowerSpectrum
+from fooofunit.capabilities.cap_ProducesPowerSpectrum import ProducesPowerSpectrum
 
 
 class NeuralPowerSpectra(sciunit.Model, ProducesPowerSpectrum):

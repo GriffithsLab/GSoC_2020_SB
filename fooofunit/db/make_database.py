@@ -3,16 +3,16 @@
 #Import all modules and libraries of interest
 import sciunit
 import json
-from FOOOF_unit import capabilities, models, scores, tests
+from fooofunit import capabilities, models, scores, tests
 from fooof import FOOOF
 import os,sys,glob, numpy as np, pandas as pd
 from itertools import product
 from itertools import groupby
-from FOOOF_unit.capabilities import ProducesPowerSpectrum
-from FOOOF_unit.models import NeuralPowerSpectra
-from FOOOF_unit.tests import CentralPeak
-from FOOOF_unit.utils import common_fr_bands
-from FOOOF_unit.welch_psd import Welch_PSD
+from fooofunit.capabilities import ProducesPowerSpectrum
+from fooofunit.models import NeuralPowerSpectra
+from fooofunit.tests import CentralPeak
+from fooofunit.utils import common_fr_bands
+from fooofunit.welch_psd import Welch_PSD
 from tvb.simulator import models
 from scipy.signal import welch
 from p_tqdm import p_map

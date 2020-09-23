@@ -5,8 +5,8 @@ Two types of score are avaiable: CorrelationScore or FloatScore"""
 import fooof
 import sciunit
 import numpy as np
-from FOOOF_unit.capabilities.cap_ProducesPowerSpectrum import ProducesPowerSpectrum
-from FOOOF_unit.scores.score_correlation import CorrelationScore
+from fooofunit.capabilities.cap_ProducesPowerSpectrum import ProducesPowerSpectrum
+from fooofunit.scores.score_correlation import CorrelationScore
 from sciunit.scores import FloatScore
 from sciunit.tests import TestM2M
 

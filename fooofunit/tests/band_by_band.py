@@ -9,7 +9,7 @@ from fooof.bands import Bands
 from fooof.analysis import get_band_peak_fm
 from fooof.utils import trim_spectrum
 from sciunit.scores import FloatScore
-from FOOOF_unit.capabilities.cap_ProducesPowerSpectrum import ProducesPowerSpectrum
+from fooofunit.capabilities.cap_ProducesPowerSpectrum import ProducesPowerSpectrum
 
     
 class _Band_by_Band(sciunit.Test):

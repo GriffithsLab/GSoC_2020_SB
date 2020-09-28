@@ -21,7 +21,7 @@ from functools import partial
 
 
 class Single_Node_TVB:
-"""Class to execute Single-Node simulations for three TVB model: Generic2DOcillator, Wilson-Cowan and Jansen-Rit"""
+  """Class to execute Single-Node simulations for three TVB model: Generic2DOcillator, Wilson-Cowan and Jansen-Rit"""
 
   # Initialize class model type (Generic2DOcillator, Wilson-Cowan and Jansen-Rit) and their corresponding parameter values
   def __init__(self, fixed_param, option):
@@ -93,8 +93,8 @@ class Single_Node_TVB:
 
 
 def TVB_database(model, varied_params, names, fr_range):
-""" Function to generate a database with CentralPeak test results of three TVB models (Generic2DOscillator, Wilson-Cowan and Jansen-Rit) for different
-  parameter combinations (parameter sweep)"""
+  """ Function to generate a database with CentralPeak test results of three TVB models (Generic2DOscillator, Wilson-Cowan and Jansen-Rit) for different
+    parameter combinations (parameter sweep)"""
 
   param_names = names
 
@@ -215,7 +215,7 @@ def csv_file(result_dataframe, fr_range, filename):
 
 
 def load_json(filename):
-"""Function to load json file with information on the parameters of interest"""
+    """Function to load json file with information on the parameters of interest"""
 
     with open(filename, 'r') as fp:
       data = json.load(fp)
@@ -223,7 +223,7 @@ def load_json(filename):
 
 
 def _sbfoo(params, model, names, range):
-"""Function to run TVB_database (used for multiprocessing purposes)"""
+    """Function to run TVB_database (used for multiprocessing purposes)"""
 
     res_alpha = TVB_database(model, params, names, range)
     return res_alpha

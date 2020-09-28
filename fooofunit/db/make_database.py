@@ -97,13 +97,19 @@ def TVB_database(model, varied_params, names, fr_range):
     parameter combinations (parameter sweep)"""
 
   param_names = names
-
-  #Obtain arrays for each parameter with their corresponding values
-  parameters = []
-  for i in range(len(param_names)):
-     parameters.append([elem[i] for elem in varied_params])
-  parameters = [list(dict.fromkeys(i)) for i in parameters]
-  parameters = tuple(parameters)
+    
+  if (type(varied_params) == tuple):
+      print('yes')
+      parameters = varied_params
+      varied_params = list(product(*parameters))
+  else:
+      #Obtain arrays for each parameter with their corresponding values
+      parameters = []
+      print('no')
+      for i in range(len(param_names)):
+         parameters.append([elem[i] for elem in varied_params])
+      parameters = [list(dict.fromkeys(i)) for i in parameters]
+      parameters = tuple(parameters)
 
   # Default values of each models
   if (model=='Generic2DOscillator'):

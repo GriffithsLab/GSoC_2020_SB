@@ -11,9 +11,9 @@ def _exec_notebook(path):
 
 
 def test():
-  _exec_notebook('Example1_CentralPeak.ipynb')
-  _exec_notebook('Example2_Band_Peak_Power.ipynb')
-  _exec_notebook('Example3_CorrelationCoefficient.ipynb')
+  _exec_notebook('examples/Example1_CentralPeak.ipynb')
+  _exec_notebook('examples/Example2_Band_Peak_Power.ipynb')
+  _exec_notebook('examples/Example3_CorrelationCoefficient.ipynb')
 
 
 #name_examples = os.listdir('examples')
